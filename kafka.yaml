@@ -1,0 +1,56 @@
+version: '3.0'
+
+services:
+  kafka:
+    image: wurstmeister/kafka:2.10-0.8.2.2
+    restart: always
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    deploy:
+      replicas: 3
+    ports:
+      - 9092:9092
+    environment:
+      BROKER_ID_COMMAND: "shuf -i 1-10000 -n 1" # generate a random broker id.
+      KAFKA_ADVERTISED_HOST_NAME: kafka.app
+      KAFKA_ZOOKEEPER_CONNECT: zoo1.app:2181,zoo2.app:2181,zoo3.app:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  zoo1:
+    image: 31z4/zookeeper
+    restart: always
+    hostname: zoo1
+    ports:
+        - 2181:2181
+        - 2888:2888
+        - 3888:3888
+    environment:
+        ZOO_MY_ID: 1
+        ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zoo2.app:2888:3888 server.3=zoo3.app:2888:3888
+
+  zoo2:
+    image: 31z4/zookeeper
+    restart: always
+    hostname: zoo2
+    ports:
+        - 2181:2181
+        - 2888:2888
+        - 3888:3888
+    environment:
+        ZOO_MY_ID: 2
+        ZOO_SERVERS: server.1=zoo1.app:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zoo3.app:2888:3888
+
+  zoo3:
+    image: 31z4/zookeeper
+    restart: always
+    hostname: zoo3
+    ports:
+        - 2181:2181
+        - 2888:2888
+        - 3888:3888
+    environment:
+        ZOO_MY_ID: 3
+        ZOO_SERVERS: server.1=zoo1.app:2888:3888 server.2=zoo2.app:2888:3888 server.3=0.0.0.0:2888:3888
