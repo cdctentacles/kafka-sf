@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2011/01/fabric" ApplicationTypeName="Compose_7" ApplicationTypeVersion="v7">
+ <ServiceManifestImport>
+  <ServiceManifestRef ServiceManifestName="kafkaPkg" ServiceManifestVersion="v7"/>
+  <EnvironmentOverrides CodePackageRef="kafka.Code">
+   <EnvironmentVariable Name="BROKER_ID_COMMAND" Value="shuf -i 1-10000 -n 1"/>
+   <EnvironmentVariable Name="HOSTNAME_COMMAND" Value="echo $Fabric_NodeIPOrFQDN"/>
+   <EnvironmentVariable Name="KAFKA_ADVERTISED_PORT" Value="9092"/>
+   <EnvironmentVariable Name="KAFKA_ZOOKEEPER_CONNECT" Value="zoo1.app:2181,zoo2.app:2181,zoo3.app:2181"/>
+  </EnvironmentOverrides>
+  <Policies>
+   <ContainerHostPolicies CodePackageRef="kafka.Code">
+    <PortBinding ContainerPort="9092" EndpointRef="kafkaEndpoint"/>
+    <Volume Source="/var/run/docker.sock" Destination="/var/run/docker.sock"/>
+   </ContainerHostPolicies>
+   <ServicePackageResourceGovernancePolicy/>
+  </Policies>
+ </ServiceManifestImport>
+ <ServiceManifestImport>
+  <ServiceManifestRef ServiceManifestName="zoo1Pkg" ServiceManifestVersion="v7"/>
+  <EnvironmentOverrides CodePackageRef="zoo1.Code">
+   <EnvironmentVariable Name="ZOO_MY_ID" Value="1"/>
+   <EnvironmentVariable Name="ZOO_SERVERS" Value="server.1=0.0.0.0:2888:3888 server.2=zoo2.app:2888:3888 server.3=zoo3.app:2888:3888"/>
+  </EnvironmentOverrides>
+  <Policies>
+   <ContainerHostPolicies CodePackageRef="zoo1.Code">
+    <PortBinding ContainerPort="2181" EndpointRef="zoo1Endpoint"/>
+    <PortBinding ContainerPort="2888" EndpointRef="zoo1Endpoint1"/>
+    <PortBinding ContainerPort="3888" EndpointRef="zoo1Endpoint2"/>
+   </ContainerHostPolicies>
+   <ServicePackageResourceGovernancePolicy/>
+  </Policies>
+ </ServiceManifestImport>
+ <ServiceManifestImport>
+  <ServiceManifestRef ServiceManifestName="zoo2Pkg" ServiceManifestVersion="v7"/>
+  <EnvironmentOverrides CodePackageRef="zoo2.Code">
+   <EnvironmentVariable Name="ZOO_MY_ID" Value="2"/>
+   <EnvironmentVariable Name="ZOO_SERVERS" Value="server.1=zoo1.app:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zoo3.app:2888:3888"/>
+  </EnvironmentOverrides>
+  <Policies>
+   <ContainerHostPolicies CodePackageRef="zoo2.Code">
+    <PortBinding ContainerPort="2181" EndpointRef="zoo2Endpoint"/>
+    <PortBinding ContainerPort="2888" EndpointRef="zoo2Endpoint1"/>
+    <PortBinding ContainerPort="3888" EndpointRef="zoo2Endpoint2"/>
+   </ContainerHostPolicies>
+   <ServicePackageResourceGovernancePolicy/>
+  </Policies>
+ </ServiceManifestImport>
+ <ServiceManifestImport>
+  <ServiceManifestRef ServiceManifestName="zoo3Pkg" ServiceManifestVersion="v7"/>
+  <EnvironmentOverrides CodePackageRef="zoo3.Code">
+   <EnvironmentVariable Name="ZOO_MY_ID" Value="3"/>
+   <EnvironmentVariable Name="ZOO_SERVERS" Value="server.1=zoo1.app:2888:3888 server.2=zoo2.app:2888:3888 server.3=0.0.0.0:2888:3888"/>
+  </EnvironmentOverrides>
+  <Policies>
+   <ContainerHostPolicies CodePackageRef="zoo3.Code">
+    <PortBinding ContainerPort="2181" EndpointRef="zoo3Endpoint"/>
+    <PortBinding ContainerPort="2888" EndpointRef="zoo3Endpoint1"/>
+    <PortBinding ContainerPort="3888" EndpointRef="zoo3Endpoint2"/>
+   </ContainerHostPolicies>
+   <ServicePackageResourceGovernancePolicy/>
+  </Policies>
+ </ServiceManifestImport>
+ <DefaultServices>
+  <Service Name="kafka" ServiceDnsName="kafka.app" ServicePackageActivationMode="ExclusiveProcess">
+   <StatelessService ServiceTypeName="kafkaType" InstanceCount="3">
+    <SingletonPartition/>
+   </StatelessService>
+  </Service>
+  <Service Name="zoo1" ServiceDnsName="zoo1.app" ServicePackageActivationMode="ExclusiveProcess">
+   <StatelessService ServiceTypeName="zoo1Type">
+    <SingletonPartition/>
+   </StatelessService>
+  </Service>
+  <Service Name="zoo2" ServiceDnsName="zoo2.app" ServicePackageActivationMode="ExclusiveProcess">
+   <StatelessService ServiceTypeName="zoo2Type">
+    <SingletonPartition/>
+   </StatelessService>
+  </Service>
+  <Service Name="zoo3" ServiceDnsName="zoo3.app" ServicePackageActivationMode="ExclusiveProcess">
+   <StatelessService ServiceTypeName="zoo3Type">
+    <SingletonPartition/>
+   </StatelessService>
+  </Service>
+ </DefaultServices>
+</ApplicationManifest>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2011/01/fabric" Name="zoo2Pkg" Version="v7">
+ <ServiceTypes>
+  <StatelessServiceType ServiceTypeName="zoo2Type" UseImplicitHost="true"/>
+ </ServiceTypes>
+ <CodePackage Name="zoo2.Code" Version="v7">
+  <EntryPoint>
+   <ContainerHost>
+    <ImageName>31z4/zookeeper</ImageName>
+   </ContainerHost>
+  </EntryPoint>
+  <EnvironmentVariables>
+   <EnvironmentVariable Name="ZOO_MY_ID" Value=""/>
+   <EnvironmentVariable Name="ZOO_SERVERS" Value=""/>
+  </EnvironmentVariables>
+ </CodePackage>
+ <Resources>
+  <Endpoints>
+   <Endpoint Name="zoo2Endpoint" Port="2181"/>
+   <Endpoint Name="zoo2Endpoint1" Port="2888"/>
+   <Endpoint Name="zoo2Endpoint2" Port="3888"/>
+  </Endpoints>
+ </Resources>
+</ServiceManifest>
