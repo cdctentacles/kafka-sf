@@ -14,7 +14,8 @@ services:
       - 9092:9092
     environment:
       BROKER_ID_COMMAND: "shuf -i 1-10000 -n 1" # generate a random broker id.
-      KAFKA_ADVERTISED_HOST_NAME: kafka.app
+      HOSTNAME_COMMAND: "echo $Fabric_NodeIPOrFQDN"
+      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zoo1.app:2181,zoo2.app:2181,zoo3.app:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

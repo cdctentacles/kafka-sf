@@ -45,6 +45,44 @@ Zxid: 0x100000000
 Mode: follower
 Node count: 4
 asnegi@nt1vm000001:~$
+
+# connect with zkCli
+asnegi@nt1vm000001:~$ sudo docker exec -it bd bash
+bash-4.4# bin/zkCli.sh
+[zk: localhost:2181(CONNECTED) 9] ls /brokers/ids
+[1165, 1162, 4010]
+```
+
+Verify kafka
+```
+asnegi@nt1vm000001:~$ sudo docker exec -it 5f22 bash
+
+bash-4.4# $KAFKA_HOME/bin/kafka-topics.sh --create --topic test1 --partitions 1 --zookeeper $KAFKA_ZOOKEEPER_CONNECT --replication-factor 2
+Created topic "test1".
+bash-4.4#
+bash-4.4# $KAFKA_HOME/bin/kafka-topics.sh --describe --topic test1 --zookeeper $KAFKA_ZOOKEEPER_CONNECT
+Topic:test1     PartitionCount:1        ReplicationFactor:2     Configs:
+        Topic: test1    Partition: 0    Leader: 1165    Replicas: 1165,1162     Isr: 1165,1162
+bash-4.4#
+
+# on one node.
+bash-4.4# $KAFKA_HOME/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test1
+[2018-12-19 05:54:39,559] WARN Property topic is not valid (kafka.utils.VerifiableProperties)
+so whats^H's up
+hello
+goodbye
+^Cbash-4.4#
+bash-4.4#
+
+# on another node
+bash-4.4#  $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test1 --from-beginning --zookeeper $KAFKA_ZOOKEEPER_CONNECT
+'bootstrap-server' is not a recognized option
+bash-4.4#  $KAFKA_HOME/bin/kafka-console-consumer.sh --topic test1 --from-beginning --zookeeper $KAFKA_ZOOKEEPER_CONNECT                            hi
+bye
+so what's up
+hello
+goodbye
+
 ```
 
 Todo :
