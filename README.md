@@ -75,8 +75,6 @@ goodbye
 bash-4.4#
 
 # on another node
-bash-4.4#  $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test1 --from-beginning --zookeeper $KAFKA_ZOOKEEPER_CONNECT
-'bootstrap-server' is not a recognized option
 bash-4.4#  $KAFKA_HOME/bin/kafka-console-consumer.sh --topic test1 --from-beginning --zookeeper $KAFKA_ZOOKEEPER_CONNECT                            hi
 bye
 so what's up
