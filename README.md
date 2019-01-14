@@ -88,5 +88,5 @@ goodbye
 
 Todo :
 * Make sure that no instances of zookeeper are on same node.
-* Generate ApplicationManifest and checkin those for deployment using linux.
-* Get powershell command equivalent of zookeeper.
+* Get powershell command equivalent of zookeeper for trying in windows.
+* Get linux equivalent command for deploying from linux.
