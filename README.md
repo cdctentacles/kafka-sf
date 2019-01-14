@@ -1,6 +1,9 @@
 # kafka-sf
 Kafka Service Fabric App
 
+### Not testing in production. Please see [issues](https://github.com/cdctentacles/kafka-sf/issues)
+However, you can try this out in your testing and staging environment and raise any issues you find.
+
 Deploy using:
 ```powershell
 Remove-ServiceFabricComposeDeployment -DeploymentName app -Force
