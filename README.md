@@ -1,8 +1,11 @@
 # kafka-sf
 Kafka Service Fabric App
 
-### Not testing in production. Please see [issues](https://github.com/cdctentacles/kafka-sf/issues)
-However, you can try this out in your testing and staging environment and raise any issues you find.
+### Not tested in production. Please see [issues](https://github.com/cdctentacles/kafka-sf/issues)
+Kafka, zookeeper and service fabric are production ready systems. However, it is still important to 
+deploy and run kafka workload in a chaos environment.
+You can try this out in your testing and staging environment and raise any issues you find.
+
 
 Deploy using:
 ```powershell
